@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: fct_orders
+    description: Processed orders.
+    columns:
+      - name: order_id
+        description: The primary key for fct_orders. Should be unique
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: Customer purchasing orders. We have repeat customers
+        tests:
+          - not_null
+      - name: order_date
+        description: Order date
+        tests:
+          - not_null
+
+  - name: dim_customers
+    description: Processed customer data.
+    columns:
+      - name: customer_id
+        description: Primary key for customers.
+        tests:
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
+      - name: number_of_orders
+        description: Number of orders. Should always be greater than 0, but does not need to be unique
+        tests:
+          - not_null
+      - name: lifetime_value
+        description: Total orders for the customer. Should be 0 or greater than 1; may be null.
+          ## don't uncomment -unique flag; 
+          ##- unique
+
