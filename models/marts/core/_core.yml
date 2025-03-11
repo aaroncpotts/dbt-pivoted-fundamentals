@@ -17,7 +17,11 @@ models:
         description: Order date
         tests:
           - not_null
-
+      - name: amount
+        description: amount per order
+        ##tests:
+        ## - assert_dollars_spent_greater_than_zero:
+        ##      group_by_column: order_id
   - name: dim_customers
     description: Processed customer data.
     columns:

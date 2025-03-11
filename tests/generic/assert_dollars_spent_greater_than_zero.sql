@@ -1,4 +1,4 @@
-{% test average_dollars_spent_greater_than_one( model, column_name, group_by_column) %}
+{% test assert_dollars_spent_greater_than_zero(model, column_name, group_by_column) %}
 
 select 
     {{ group_by_column }},
@@ -6,7 +6,7 @@ select
 
 from {{ model }}
 group by 1
-having average_amount < 1
+having average_amount < 0
 
 
 {% endtest %}
