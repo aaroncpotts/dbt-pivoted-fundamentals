@@ -3,6 +3,9 @@ version: 2
 models:
   - name: fct_orders
     description: Processed orders.
+    tests:
+      - dbt_utils.express_is_true:
+          expression: "amount > 5"
     columns:
       - name: order_id
         description: The primary key for fct_orders. Should be unique
