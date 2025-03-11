@@ -22,9 +22,13 @@ models:
           - not_null
       - name: amount
         description: amount per order
-        ##tests:
-        ## - assert_dollars_spent_greater_than_zero:
-        ##      group_by_column: order_id
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 5
+              row_condition: "order_id is not null"
+              strictly: True
+          - assert_dollars_spent_greater_than_zero:
+              group_by_column: order_id
   - name: dim_customers
     description: Processed customer data.
     columns:
