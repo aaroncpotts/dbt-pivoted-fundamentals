@@ -12,7 +12,10 @@ sources:
               description: Primary key for customers
               tests:
                 - unique
-                - not_null
+                - not_null:
+                    config:
+                      severity: error
+                      error_if: ">100"
 
         - name: orders
           description: Raw orders data.
