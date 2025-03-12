@@ -37,3 +37,8 @@ models:
     marts:
       +materialized: table
       +required_tests: { "relationship.*": 2 }
+
+tests:
+  jaffle_shop:
+    +severity: warn
+    +store_failures: true

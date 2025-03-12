@@ -16,6 +16,8 @@ models:
         description: Customer purchasing orders. We have repeat customers
         tests:
           - not_null
+          ##this next one fails; use dbt test -s orders --store_failures to find results
+          - unique
       - name: order_date
         description: Order date
         tests:
