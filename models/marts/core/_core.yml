@@ -1,0 +1,61 @@
+version: 2
+
+models:
+  - name: fct_orders
+    description: Complete orders model including the amount associated with each order..
+    tests:
+      - dbt_utils.expression_is_true:
+          expression: "amount >= 0"
+    columns:
+      - name: order_id
+        description: The primary key for fct_orders. Should be unique
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: Customer purchasing orders. We have repeat customers
+        tests:
+          - not_null
+          ##this next one fails; use dbt test -s orders --store_failures to find results
+          - unique
+      - name: order_date
+        description: Order date
+        tests:
+          - not_null
+      - name: amount
+        description: amount per order
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              row_condition: "order_id is not null"
+              strictly: false
+          - assert_dollars_spent_greater_than_zero:
+              group_by_column: order_id
+          - dbt_expectations.expect_column_mean_to_be_between: 
+          # this will perform what our singular and generic tests do!
+              min_value: 1
+              group_by: [customer_id] 
+              row_condition: "order_id is not null" # (Optional)
+              strictly: false
+  - name: dim_customers
+    description: Processed customer data.
+    columns:
+      - name: customer_id
+        description: Primary key for customers.
+        tests:
+          - unique
+          - not_null
+          - dbt_utils.cardinality_equality:
+              field: customer_id
+              to: ref('stg_customers')
+      - name: first_order_date
+        description: NULL when a customer has not yet placed an order.
+      - name: number_of_orders
+        description: Number of orders. Should always be greater than 0, but does not need to be unique
+        tests:
+          - not_null
+      - name: lifetime_value
+        description: Total orders for the customer. Should be 0 or greater than 1; may be null.
+        tests:
+          - assert_dollars_spent_greater_than_zero:
+              group_by_column: customer_id

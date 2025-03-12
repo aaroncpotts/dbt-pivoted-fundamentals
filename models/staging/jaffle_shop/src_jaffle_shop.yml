@@ -3,7 +3,7 @@ version: 2
 sources:
     - name: jaffle_shop
       description: A clone of a Postgres application database.
-      database: raw
+      database: dbt-fundamentals-blah
       tables:
         - name: customers
           description: Raw customers data.
@@ -12,7 +12,10 @@ sources:
               description: Primary key for customers
               tests:
                 - unique
-                - not_null
+                - not_null:
+                    config:
+                      severity: error
+                      error_if: ">100"
 
         - name: orders
           description: Raw orders data.
