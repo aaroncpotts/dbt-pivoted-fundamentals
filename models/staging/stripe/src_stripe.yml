@@ -5,3 +5,17 @@ sources:
       database: dbt-fundamentals-blah
       tables:
         - name: payments
+          columns:
+            - name: id
+              description: Original payment id
+              tests:
+                - unique:
+                    config:
+                      severity: error
+                      error_if: ">100"
+                      warn_if: ">10"
+                - not_null
+            - name: paymentmethod
+              description: Original payment method
+              tests:
+                - not_null
